@@ -1,0 +1,33 @@
+## configure_ipv6_send_ra ##
+
+Enabling Fortinet interface(s) to send IPv6 Route Advertisements on the LAN is not quite as simple as enabling the obvious configuration nob found in the CLI configuration of a Fortinet firewall.
+
+To enable a fortinet interface to send IPv6 RAs on a LAN, reference the configuration located below, with v6 address fd00:1::/64 used as an example.
+
+
+    edit "portXX"
+
+        config ipv6
+
+            set ip6-address fd00:1::1/64
+# Enables interface to Send RAs
+            set ip6-send-adv enable
+# Enables DNS Flag to be sent with the RA
+            set ip6-other-flag enable
+#Create Prefix List that says what subnet to send RAs on, and to enable various flags
+            config ip6-prefix-list
+
+                edit fd00:1::/64
+
+                    set autonomous-flag enable
+
+                    set onlink-flag enable
+
+                next
+
+            end
+
+        end
+        
+  
+  After configuring this, IPv6 RAs should be sent on the LAN.
